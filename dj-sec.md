@@ -1,16 +1,19 @@
 # Live-Fire Exercises: Security in Django
 
----
+John Hess
+
+.fx: titleslide
+
+<!-- 
 
 ## Who am I?
-
 
 * Software Engineer, Data Scientist, Product Manager, Engineering Manager
 * Security-Curious
     * YMMV, IANASR, RTM, TLA, etc.
     * I am probably *not* the expert in this room
 * I write software at Google; I don't speak for them
-
+ -->
 ---
 
 ## Objective
@@ -32,7 +35,8 @@ At the end of this talk, you should be able to:
 * CSRF (Cross Site Request Forgery)
 	* A bit more subtle
 	* Slightly less giant catastophe if it happens
-* Both take advantage of the trust you have in your users and your users in you <small>(hint: don't trust them).</small>
+* Both take advantage of the trust you have in your users and your users in you
+	* Don't trust people.
 
 ---
 
@@ -280,13 +284,12 @@ Audience participation: someone please exploit this :-)
 	$("#some-id").html(someText);     // jquery
 	element.innerHTML = someText;     // plain ol' js
 
-
 ---
 
 ## XSS: Summary
 
 * Do. Not. Trust. User. Input.
-* Escape user input 100% of the time.
+* Escape user input when you render it.  Every  time.
 * Just because it came from your server as JSON doesn't mean it's not user input.
 * Templating is your friend.
 	* Django templating server-side
@@ -295,16 +298,6 @@ Audience participation: someone please exploit this :-)
 ---
 
 # CSRF
-
----
-
-## CSRF: Cross Site Request Forgery
-
-> The key to understanding CSRF attacks is to recognize that websites typically don't verify that a request came from an authorized user. Instead they verify only that the request came from the browser of an authorized user.
-
--- Bill Zeller
-
-.notes: Again, attackers are using the trust you have in a user to do anything a user can do.  Exfiltrate data, change passwords, etc.
 
 ---
 
@@ -320,13 +313,19 @@ Audience participation: someone please exploit this :-)
 
 ---
 
-<img src="images/logged_in.png" />
+## CSRF: Cross Site Request Forgery
 
-.fx: imageslide
+> The key to understanding CSRF attacks is to recognize that websites typically don't verify that a request came from an authorized user. Instead they verify only that the request came from the browser of an authorized user.
+
+-- Bill Zeller
+
+.notes: Again, attackers are using the trust you have in a user to do anything a user can do.  Exfiltrate data, change passwords, etc.
 
 ---
 
-## Live Fire: CSRF
+<img src="images/logged_in.png" />
+
+.fx: imageslide
 
 ---
 
@@ -513,7 +512,7 @@ CSRF Middleware Failure Modes
 What to do if you're in that situation or might be:
 
 * Store the CSRF token connected to the user's session on the server-side and check against that tamper-proof value
-* Cryptographically sign the token with a private key, and, upon the token's return, use that to check that you are the one who generated the value
+* Cryptographically sign a user/session-associated token with a private key, and, upon the token's return, use that to check that you are the one who generated the value
 
 ---
 
@@ -532,13 +531,21 @@ What to do if you're in that situation or might be:
 <br/>
 <br/>
 
-everything's at <a href="http://veryveryvulnerable.com">http://veryveryvulnerable.com</a>
+<small>
+Thanks to Morgan Edwards and Ryan Chan
 
-<div>
-	<small>(and either 
+everything's at <a href="http://veryveryvulnerable.com">http://veryveryvulnerable.com</a>
+(and either 
 	<img style="height:30px; display:inline" src="images/mit.png"/> or <img style="height:30px; display:inline" src="images/cc-by.png"/>)
 <small>
-</div>
+
+---
+
+# One Last Fun Fact
+
+.notes: The public suffix list is why you can't do this on heroku, appengine, and the like.
+
+.fx: titleslide
 
 ---
 
